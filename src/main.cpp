@@ -58,7 +58,8 @@ int main()
           * another PID controller to control the speed!
           */
           pid.UpdateError(cte);
-          steer_value = std::min(1., std::max(-1., pid.TotalError()));
+          pid.Twiddle();
+          steer_value = std::min(1., std::max(-1., pid.SteeringValue()));
 
           // DEBUG
           //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
