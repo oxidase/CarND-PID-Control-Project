@@ -27,6 +27,7 @@ void PID::Init(double Kp, double Ki, double Kd)
     dK[2] = 0.5;
 
     // twiddling state
+    best_error = std::numeric_limits<double>::infinity();
     error = 0.;
     iteration = 0;
     twiddling_index = -1;
@@ -47,9 +48,11 @@ void PID::Twiddle()
     if (iteration < 1400)
         return;
 
-    std::cout << "Twiddle " << (dK[0] + dK[1] + dK[2]) << " index =" << twiddling_index << " best_error = " << best_error << " error = " << error << "\n";
-    std::cout << " K: " << K[0] << " " << K[1] << " " << K[2] << "\n";
-    std::cout << "dK: " << dK[0] << " " << dK[1] << " " << dK[2] << "\n";
+    std::cerr << "Twiddle sum = " << (dK[0] + dK[1] + dK[2]) << " index = " << twiddling_index
+              << " best_error = " << best_error << " error = " << error << "\n";
+    std::cerr << "  K: " << K[0] << " " << K[1] << " " << K[2] << "\n";
+    std::cerr << " dK: " << dK[0] << " " << dK[1] << " " << dK[2] << "\n";
+    std::cout << best_error << " " << error << " " << K[0] << " " << K[1] << " " << K[2] << " " << dK[0] << " " << dK[1] << " " << dK[2] << "\n";
 
     if (dK[0] + dK[1] + dK[2] < 1e-4)
         return;
@@ -87,16 +90,18 @@ void PID::Twiddle()
         }
     }
 
-    std::cout << "Updated to index = " << twiddling_index << "\n";
-    std::cout << " K: " << K[0] << " " << K[1] << " " << K[2] << "\n";
-    std::cout << "dK: " << dK[0] << " " << dK[1] << " " << dK[2] << "\n";
+    std::cerr << "Updated to index = " << twiddling_index << "\n";
+    std::cerr << "  K: " << K[0] << " " << K[1] << " " << K[2] << "\n";
+    std::cerr << " dK: " << dK[0] << " " << dK[1] << " " << dK[2] << "\n";
 
-    error = 0;
-    iteration = 0;
+    i_error = 0.;
+    error = 0.;
+    iteration = 0.;
 }
 
 double PID::SteeringValue()
 {
-    std::cout << p_error << " " << i_error << " " << d_error << " " << (K[0] * p_error + K[1] * i_error + K[2] * d_error) << "    iteration = " << iteration << "  error = " <<  error << "\n";
+    //std::cout << p_error << " " << i_error << " " << d_error << " " << (K[0] * p_error + K[1] * i_error + K[2] * d_error)
+    // << "    iteration = " << iteration << "  error = " <<  error << "\n";
     return K[0] * p_error + K[1] * i_error + K[2] * d_error;
 }

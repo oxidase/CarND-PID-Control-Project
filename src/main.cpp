@@ -62,13 +62,13 @@ int main()
           steer_value = std::min(1., std::max(-1., pid.SteeringValue()));
 
           // DEBUG
-          //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+          //std::cerr << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = 0.3;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-          //std::cout << msg << std::endl;
+          //std::cerr << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
@@ -95,18 +95,18 @@ int main()
   });
 
   h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
-    std::cout << "Connected!!!" << std::endl;
+    std::cerr << "Connected!!!" << std::endl;
   });
 
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) {
     ws.close();
-    std::cout << "Disconnected" << std::endl;
+    std::cerr << "Disconnected" << std::endl;
   });
 
   int port = 4567;
   if (h.listen(port))
   {
-    std::cout << "Listening to port " << port << std::endl;
+    std::cerr << "Listening to port " << port << std::endl;
   }
   else
   {
