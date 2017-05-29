@@ -69,7 +69,7 @@ void PID::Twiddle()
         if (error < best_error)
         {
             best_error = error;
-            dK[twiddling_index / 2] *= 1.1;
+            dK[twiddling_index / 2] *= 1.25;
             twiddling_index = (twiddling_index + (twiddling_index % 2 == 0 ? 2 : 1)) % 6;
             K[twiddling_index/2] += dK[twiddling_index/2];
         }
@@ -83,7 +83,7 @@ void PID::Twiddle()
             else
             {
                 K[twiddling_index/2] += dK[twiddling_index/2];
-                dK[twiddling_index / 2] *= 0.9;
+                dK[twiddling_index / 2] *= 0.75;
                 twiddling_index = (twiddling_index + 1) % 6;
                 K[twiddling_index/2] += dK[twiddling_index/2];
             }
