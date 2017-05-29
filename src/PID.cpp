@@ -22,14 +22,14 @@ void PID::Init(double Kp, double Ki, double Kd)
     p_error = 0.;
     d_error = 0.;
 
-    dK[0] = 0.005;
+    dK[0] = 0.05;
     dK[1] = 0.0005;
-    dK[2] = 0.05;
+    dK[2] = 0.5;
 
     // twiddling state
     error = 0.;
     iteration = 0;
-    twiddling_index = -3;
+    twiddling_index = -1;
 }
 
 void PID::UpdateError(double cte)
@@ -44,7 +44,7 @@ void PID::UpdateError(double cte)
 
 void PID::Twiddle()
 {
-    if (iteration < 700)
+    if (iteration < 1400)
         return;
 
     std::cout << "Twiddle " << (dK[0] + dK[1] + dK[2]) << " index =" << twiddling_index << " best_error = " << best_error << " error = " << error << "\n";
