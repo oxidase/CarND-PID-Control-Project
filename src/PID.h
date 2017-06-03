@@ -13,6 +13,7 @@ public:
     double best_error;
     int iteration;
     int twiddling_index;
+    bool do_twiddle;
 
     /*
      * Coefficients

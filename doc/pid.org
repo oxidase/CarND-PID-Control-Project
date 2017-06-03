@@ -1,3 +1,10 @@
+#+title: CarND-Controls-PID project
+#+html_link_home:
+#+html_head: <link rel="stylesheet" type="text/css" href="http://www.star.bris.ac.uk/bjm/css/bjm.css" />
+#+html_link_up:
+#+html_mathjax:
+#+latex_header: \usepackage{fullpage}
+
 * [[https://en.wikipedia.org/wiki/PID_controller][PID controller]]
 
 PID controller computes the control value $u(t)$ as a weighted sum of
@@ -30,7 +37,7 @@ The ultimate gain $K_u$ is obtained via bisecting $K_p$ parameter finding an app
 | 0.5625 | unstable oscillations |
 |   0.52 | $K_u$                 |
 
-The final results are $K_u=-0.052$ and the oscillation period $T_u=18$ seconds.
+The final results are $K_u=-0.52$ and the oscillation period $T_u=18$ seconds.
 
 | Control Type 	 | $K_{p}$ | 	$K_{i}$           | $K_{d}$ |
 |-----------------+---------+---------------------+---------|
@@ -42,7 +49,7 @@ $K_p=0.2$, $K_i=0.004$, and $K_d= 2.5$.
 * Parameters twiddling
 
 These values I used as a starting point for the parameters twiddling procedure explained in the lecture.
-The twiddling procedure is implemented in the [[https://github.com/oxidase/CarND-PID-Control-Project/blob/f3e6ec7b72f4b06ac0d95790f1be2e937908a540/src/PID.cpp#L48-L99][PID::Twiddle()] method and represents a variant of the bisection method
+The twiddling procedure is implemented in the [[https://github.com/oxidase/CarND-PID-Control-Project/blob/f3e6ec7b72f4b06ac0d95790f1be2e937908a540/src/PID.cpp#L48-L99][PID::Twiddle()]] method and represents a variant of the bisection method
 for finding minimum of the error function that I defined as
 \[
 E = \int_0^T e_{\mathrm{cte}}(t)^2 dt \approx \sum_{i=1}^{1400} e_{\mathrm{cte}}_i^2
@@ -55,46 +62,49 @@ then the current best error then $dK$ is decreased by the factor 1.25.
 
 After finding the local minimum with $E=208.765$ I have restarted twiddling with initial parameters
 $K_p=0.25$, $K_i=5e-3$, and $K_d= 2$.
-The second local minimum $K_p=0.238358$, $K_i=0.00788281$, and $K_d=2$ with $E=188.776$.
+The second local minimum $K_p=0.238358$, $K_i=0.00788281$, and $K_d=2$ with $E=188.776$ I used to compare
+P-, PD-, and PID-controllers.
 
+The twiddling process is presented on the following figures:
 
-#+begin_src gnuplot :exports both :file twiddle_error.png
+#+begin_src gnuplot :exports both :file images/twiddle_error.png
 reset
 
 set title "Error"
 set xlabel "Step"
 set ylabel "Error"
 
-plot 'out.dat' using 0:1 with histeps title 'best error', 'out.dat' using 0:2 with histeps title 'error'
+plot 'data/twiddle.data' using 0:1 with histeps title 'best error',\
+     'data/twiddle.data' using 0:2 with histeps title 'error'
 #+end_src
 
 #+results:
-[[file:twiddle_error.png]]
+[[file:images/twiddle_error.png]]
 
-#+begin_src gnuplot :exports both :file twiddle_p.png
+#+begin_src gnuplot :exports both :file images/twiddle_p.png
 reset
 set title "P coefficient"
 set xlabel "Step"
-plot 'out.dat' using 0:3 with histeps title 'Kp'
+plot 'data/twiddle.data' using 0:3 with histeps title 'Kp'
 #+end_src
 
 #+results:
 [[file:twiddle_p.png]]
-#+begin_src gnuplot :exports both :file twiddle_i.png
+#+begin_src gnuplot :exports both :file images/twiddle_i.png
 reset
 set title "I coefficient"
 set xlabel "Step"
-plot 'out.dat' using 0:4 with histeps title 'Ki'
+plot 'data/twiddle.data' using 0:4 with histeps title 'Ki'
 #+end_src
 
 #+results:
 [[file:twiddle_i.png]]
 
-#+begin_src gnuplot :exports both :file twiddle_d.png
+#+begin_src gnuplot :exports both :file images/twiddle_d.png
 reset
 set title "D coefficient"
 set xlabel "Step"
-plot 'out.dat' using 0:5 with histeps title 'Kd'
+plot 'data/twiddle.data' using 0:5 with histeps title 'Kd'
 #+end_src
 
 #+results:
@@ -102,3 +112,105 @@ plot 'out.dat' using 0:5 with histeps title 'Kd'
 
 
 This procedure is very simple to implement but very sensitive to local minima,
+and as the next step a 3D optimization with the stochastic gradient descent
+can improve the PID controller.
+
+* Comparison of P, PD and PID controllers
+
+Video for comparison was captured with =gtk-recordmydesktop= and compressed with =ffmpeg= as
+#+begin_src sh
+ffmpeg -i pid.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 pid.mp4
+ffmpeg -i pd.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 pd.mp4
+ffmpeg -i p.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 p.mp4
+#+end_src
+
+** PID controller
+
+** PD controller
+
+** P controller
+
+** Comparison
+
+#+begin_src gnuplot :exports both :file images/sq_error.png
+reset
+set title "Squared error"
+set xlabel "Step"
+set yrange [0:1000]
+set ytics 0,200,1000
+plot 'data/pid.data' using 0:3 with lines title 'PID controller',\
+     'data/pd.data' using 0:3 with lines title 'PD controller',\
+     'data/p.data' using 0:3 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/sq_error.png]]
+
+
+#+begin_src gnuplot :exports both :file images/cte.png
+reset
+set title "Cross-track error"
+set xlabel "Step"
+plot 'data/pid.data' using 0:2 with lines title 'PID controller',\
+     'data/pd.data' using 0:2 with lines title 'PD controller',\
+     'data/p.data' using 0:2 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/cte.png]]
+
+#+begin_src gnuplot :exports both :file images/p_error.png
+reset
+set title "P-error"
+set xlabel "Step"
+plot 'data/pid.data' using 0:4 with lines title 'PID controller',\
+     'data/pd.data' using 0:4 with lines title 'PD controller',\
+     'data/p.data' using 0:4 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/p_error.png]]
+
+#+begin_src gnuplot :exports both :file images/d_error.png
+reset
+set title "D-error"
+set xlabel "Step"
+plot 'data/pid.data' using 0:6 with lines title 'PID controller',\
+     'data/pd.data' using 0:6 with lines title 'PD controller',\
+     'data/p.data' using 0:6 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/d_error.png]]
+
+#+begin_src gnuplot :exports both :file images/i_error.png
+reset
+set title "I-error"
+set xlabel "Step"
+plot 'data/pid.data' using 0:5 with lines title 'PID controller',\
+     'data/pd.data' using 0:5 with lines title 'PD controller',\
+     'data/p.data' using 0:5 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/i_error.png]]
+
+#+begin_src gnuplot :exports both :file images/steering value.png
+reset
+set title "Steering value"
+set xlabel "Step"
+set yrange [-1:1]
+set ytics -1,0.5,1
+plot 'data/pid.data' using 0:7 with lines title 'PID controller',\
+     'data/pd.data' using 0:7 with lines title 'PD controller',\
+     'data/p.data' using 0:7 with lines title 'P controller'
+#+end_src
+
+#+results:
+[[file:images/steering value.png]]
+
+Comparison shows that the PID controller is the best choice
+to control the vehicle.
+P-controller fails and the car goes off-road after 300 steps.
+PD-controller performs better at the start but the uncompensated
+integral error makes it worse than PID controller after approximately one loop.

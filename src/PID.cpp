@@ -9,7 +9,7 @@ using namespace std;
  * TODO: Complete the PID class.
  */
 
-PID::PID() {}
+PID::PID() : do_twiddle(false) {}
 
 PID::~PID() {}
 
@@ -40,12 +40,17 @@ void PID::UpdateError(double cte)
     i_error += cte;
 
     error += cte * cte;
+
+    std::cout << iteration << " " << cte << " " << error << " "
+              << p_error << " " << i_error << " " << d_error << " " << SteeringValue()
+              << "\n";
+
     ++iteration;
 }
 
 void PID::Twiddle()
 {
-    if (iteration < 1400)
+    if (!do_twiddle || iteration < 1400)
         return;
 
     std::cerr << "Twiddle sum = " << (dK[0] + dK[1] + dK[2]) << " index = " << twiddling_index
@@ -101,7 +106,5 @@ void PID::Twiddle()
 
 double PID::SteeringValue()
 {
-    //std::cout << p_error << " " << i_error << " " << d_error << " " << (K[0] * p_error + K[1] * i_error + K[2] * d_error)
-    // << "    iteration = " << iteration << "  error = " <<  error << "\n";
     return K[0] * p_error + K[1] * i_error + K[2] * d_error;
 }
