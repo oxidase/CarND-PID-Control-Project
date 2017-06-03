@@ -33,7 +33,7 @@ int main()
   uWS::Hub h;
 
   PID pid;
-  pid.Init(-0.238358, -0.00788281, -2);
+  pid.Init(0.238358, 0.00788281, 2);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -59,7 +59,7 @@ int main()
           */
           pid.UpdateError(cte);
           pid.Twiddle();
-          steer_value = std::min(1., std::max(-1., pid.SteeringValue()));
+          steer_value = std::min(1., std::max(-1., -pid.SteeringValue()));
 
           // DEBUG
           //std::cerr << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
