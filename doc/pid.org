@@ -1,4 +1,5 @@
 #+title: CarND-Controls-PID project
+#+author: Michael Krasnyk
 #+html_link_home:
 #+html_head: <link rel="stylesheet" type="text/css" href="http://www.star.bris.ac.uk/bjm/css/bjm.css" />
 #+html_link_up:
@@ -16,6 +17,8 @@ proportional, integral, and derivative error terms
 
 where $K_{\text{p}}$, $K_{\text{i}}$, and $K_{\text{d}}$, all non-negative, denote
 the coefficients for the proportional, integral, and derivative terms.
+
+The [[https://github.com/oxidase/CarND-PID-Control-Project/blob/master/src/main.cpp#L62][feedback steering value]] is $-u(t)$ clamped to the interval $[-1, 1]$.
 
 * Initial parameters tuning
 
@@ -51,8 +54,9 @@ $K_p=0.2$, $K_i=0.004$, and $K_d= 2.5$.
 These values I used as a starting point for the parameters twiddling procedure explained in the lecture.
 The twiddling procedure is implemented in the [[https://github.com/oxidase/CarND-PID-Control-Project/blob/f3e6ec7b72f4b06ac0d95790f1be2e937908a540/src/PID.cpp#L48-L99][PID::Twiddle()]] method and represents a variant of the bisection method
 for finding minimum of the error function that I defined as
+
 \[
-E = \int_0^T e_{\mathrm{cte}}(t)^2 dt \approx \sum_{i=1}^{1400} e_{\mathrm{cte}}_i^2
+E = \int_0^T e_{\text{cte}}(t)^2 dt \approx \sum_{i=1}^{1400} e_{\text{cte}}[i]^2
 \]
 
 The twiddling method iterates over $K$ parameters and modifies one parameter per step as $K\pm dK$ while keeping other parameters
@@ -89,7 +93,7 @@ plot 'data/twiddle.data' using 0:3 with histeps title 'Kp'
 #+end_src
 
 #+results:
-[[file:twiddle_p.png]]
+[[file:images/twiddle_p.png]]
 #+begin_src gnuplot :exports both :file images/twiddle_i.png
 reset
 set title "I coefficient"
@@ -98,7 +102,7 @@ plot 'data/twiddle.data' using 0:4 with histeps title 'Ki'
 #+end_src
 
 #+results:
-[[file:twiddle_i.png]]
+[[file:images/twiddle_i.png]]
 
 #+begin_src gnuplot :exports both :file images/twiddle_d.png
 reset
@@ -108,12 +112,12 @@ plot 'data/twiddle.data' using 0:5 with histeps title 'Kd'
 #+end_src
 
 #+results:
-[[file:twiddle_d.png]]
+[[file:images/twiddle_d.png]]
 
 
 This procedure is very simple to implement but very sensitive to local minima,
-and as the next step a 3D optimization with the stochastic gradient descent
-can improve the PID controller.
+and as the next step a 3 prarameters optimization with the stochastic gradient descent
+can improve the PID controller performance.
 
 * Comparison of P, PD and PID controllers
 
@@ -126,9 +130,21 @@ ffmpeg -i p.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 p.mp4
 
 ** PID controller
 
+Coefficients for PID controller are $K_p=0.238358$, $K_i=0.00788281$, and $K_d=2$.
+
+[[https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/pid.mp4][Link to video file https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pid.mp4]]
+
 ** PD controller
 
+Coefficients for PID controller are $K_p=0.238358$, $K_i=0$, and $K_d=2$.
+
+[[https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/pd.mp4][Link to Video file https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pd.mp4]]
+
 ** P controller
+
+Coefficients for PID controller are $K_p=0.238358$, $K_i=0, and $K_d=0$.
+
+[[https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/p.mp4][Link to video file https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/p.mp4]]
 
 ** Comparison
 

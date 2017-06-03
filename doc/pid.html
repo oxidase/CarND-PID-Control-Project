@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2017-06-03 Sat 11:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CarND-Controls-PID project</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Michael Krasnyk" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://www.star.bris.ac.uk/bjm/css/bjm.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">CarND-Controls-PID project</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org137ed08">1. PID controller</a></li>
+<li><a href="#org429a5ab">2. Initial parameters tuning</a></li>
+<li><a href="#orgaef1417">3. Parameters twiddling</a></li>
+<li><a href="#org2332e75">4. Comparison of P, PD and PID controllers</a>
+<ul>
+<li><a href="#org4edad2b">4.1. PID controller</a></li>
+<li><a href="#org93a232a">4.2. PD controller</a></li>
+<li><a href="#org13c8636">4.3. P controller</a></li>
+<li><a href="#orgc77c0e4">4.4. Comparison</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org137ed08" class="outline-2">
+<h2 id="org137ed08"><span class="section-number-2">1</span> <a href="https://en.wikipedia.org/wiki/PID_controller">PID controller</a></h2>
+<div class="outline-text-2" id="text-1">
+<p>
+PID controller computes the control value \(u(t)\) as a weighted sum of
+proportional, integral, and derivative error terms
+</p>
+
+<p>
+\[
+{\displaystyle u(t)=K_{\text{p}}e(t)+K_{\text{i}}\int _{0}^{t}e(\tau )\,d\tau +K_{\text{d}}{\frac {de(t)}{dt}},}
+\]
+</p>
+
+<p>
+where \(K_{\text{p}}\), \(K_{\text{i}}\), and \(K_{\text{d}}\), all non-negative, denote
+the coefficients for the proportional, integral, and derivative terms.
+</p>
+
+<p>
+The <a href="https://github.com/oxidase/CarND-PID-Control-Project/blob/master/src/main.cpp#L62">feedback steering value</a> is \(-u(t)\) clamped to the interval \([-1, 1]\).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org429a5ab" class="outline-2">
+<h2 id="org429a5ab"><span class="section-number-2">2</span> Initial parameters tuning</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The initial parameter estimation was made with a heuristic <a href="https://en.wikipedia.org/wiki/PID_controller#Ziegler.E2.80.93Nichols_method">Ziegler–Nichols method</a>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Control Type</th>
+<th scope="col" class="org-left">\(K_{p}\)</th>
+<th scope="col" class="org-left">\(K_{i}\)</th>
+<th scope="col" class="org-left">\(K_{d}\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">P</td>
+<td class="org-left">\(0.50{K_{u}}\)</td>
+<td class="org-left">-</td>
+<td class="org-left">-</td>
+</tr>
+
+<tr>
+<td class="org-left">PI</td>
+<td class="org-left">\(0.45{K_{u}}\)</td>
+<td class="org-left">\({\displaystyle 0.54{K_{u}}/T_{u}}\)</td>
+<td class="org-left">-</td>
+</tr>
+
+<tr>
+<td class="org-left">PID</td>
+<td class="org-left">\(0.60{K_{u}}\)</td>
+<td class="org-left">\({\displaystyle 1.2{K_{u}}/T_{u}}\)</td>
+<td class="org-left">\({\displaystyle 3{K_{u}}{T_{u}}/40}\)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The ultimate gain \(K_u\) is obtained via bisecting \(K_p\) parameter finding an approximate value between stable and unstable oscillation
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">\(K_u\)</td>
+<td class="org-left">result</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-left">straight</td>
+</tr>
+
+<tr>
+<td class="org-right">1.</td>
+<td class="org-left">unstable oscillations</td>
+</tr>
+
+<tr>
+<td class="org-right">0.5</td>
+<td class="org-left">stable oscillations</td>
+</tr>
+
+<tr>
+<td class="org-right">0.75</td>
+<td class="org-left">unstable oscillations</td>
+</tr>
+
+<tr>
+<td class="org-right">0.625</td>
+<td class="org-left">unstable oscillations</td>
+</tr>
+
+<tr>
+<td class="org-right">0.5625</td>
+<td class="org-left">unstable oscillations</td>
+</tr>
+
+<tr>
+<td class="org-right">0.52</td>
+<td class="org-left">\(K_u\)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The final results are \(K_u=-0.52\) and the oscillation period \(T_u=18\) seconds.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Control Type</th>
+<th scope="col" class="org-right">\(K_{p}\)</th>
+<th scope="col" class="org-left">\(K_{i}\)</th>
+<th scope="col" class="org-right">\(K_{d}\)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">PID</td>
+<td class="org-right">0.312</td>
+<td class="org-left">3.466&times; 10<sup>-2</sup></td>
+<td class="org-right">0.702</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+After some  manual parameters adjustments I chose the following values
+\(K_p=0.2\), \(K_i=0.004\), and \(K_d= 2.5\).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaef1417" class="outline-2">
+<h2 id="orgaef1417"><span class="section-number-2">3</span> Parameters twiddling</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+These values I used as a starting point for the parameters twiddling procedure explained in the lecture.
+The twiddling procedure is implemented in the <a href="https://github.com/oxidase/CarND-PID-Control-Project/blob/f3e6ec7b72f4b06ac0d95790f1be2e937908a540/src/PID.cpp#L48-L99">PID::Twiddle()</a> method and represents a variant of the bisection method
+for finding minimum of the error function that I defined as
+</p>
+
+<p>
+\[
+E = \int_0^T e_{\text{cte}}(t)^2 dt \approx \sum_{i=1}^{1400} e_{\text{cte}}[i]^2
+\]
+</p>
+
+<p>
+The twiddling method iterates over \(K\) parameters and modifies one parameter per step as \(K\pm dK\) while keeping other parameters
+constant. If the error per period for the modified parameter is better than the current best one
+then the parameter value is saved and \(dK\) is increased by the factor 1.25. If both errors for \(K\pm dK\) are worse
+then the current best error then \(dK\) is decreased by the factor 1.25.
+</p>
+
+<p>
+After finding the local minimum with \(E=208.765\) I have restarted twiddling with initial parameters
+\(K_p=0.25\), \(K_i=5e-3\), and \(K_d= 2\).
+The second local minimum \(K_p=0.238358\), \(K_i=0.00788281\), and \(K_d=2\) with \(E=188.776\) I used to compare
+P-, PD-, and PID-controllers.
+</p>
+
+<p>
+The twiddling process is presented on the following figures:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"Error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #008b8b;">set</span> ylabel <span style="color: #8b2252;">"Error"</span>
+
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/twiddle.data'</span> <span style="color: #228b22;">using</span> 0:1 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">histeps</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'best error'</span>,\
+     <span style="color: #8b2252;">'data/twiddle.data'</span> <span style="color: #228b22;">using</span> 0:2 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">histeps</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'error'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/twiddle_error.png" alt="twiddle_error.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"P coefficient"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/twiddle.data'</span> <span style="color: #228b22;">using</span> 0:3 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">histeps</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'Kp'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/twiddle_p.png" alt="twiddle_p.png" />
+</p>
+</div>
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"I coefficient"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/twiddle.data'</span> <span style="color: #228b22;">using</span> 0:4 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">histeps</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'Ki'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/twiddle_i.png" alt="twiddle_i.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"D coefficient"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/twiddle.data'</span> <span style="color: #228b22;">using</span> 0:5 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">histeps</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'Kd'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/twiddle_d.png" alt="twiddle_d.png" />
+</p>
+</div>
+
+
+<p>
+This procedure is very simple to implement but very sensitive to local minima,
+and as the next step a 3 prarameters optimization with the stochastic gradient descent
+can improve the PID controller performance.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2332e75" class="outline-2">
+<h2 id="org2332e75"><span class="section-number-2">4</span> Comparison of P, PD and PID controllers</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Video for comparison was captured with <code>gtk-recordmydesktop</code> and compressed with <code>ffmpeg</code> as
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">ffmpeg -i pid.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 pid.mp4
+ffmpeg -i pd.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 pd.mp4
+ffmpeg -i p.ogv -map 0:1 -acodec none -vcodec h264 -crf 36 p.mp4
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4edad2b" class="outline-3">
+<h3 id="org4edad2b"><span class="section-number-3">4.1</span> PID controller</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Coefficients for PID controller are \(K_p=0.238358\), \(K_i=0.00788281\), and \(K_d=2\).
+</p>
+
+<p>
+<a href="https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/pid.mp4">Link to video file <a href="https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pid.mp4">https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pid.mp4</a></a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org93a232a" class="outline-3">
+<h3 id="org93a232a"><span class="section-number-3">4.2</span> PD controller</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Coefficients for PID controller are \(K_p=0.238358\), \(K_i=0\), and \(K_d=2\).
+</p>
+
+<p>
+<a href="https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/pd.mp4">Link to Video file <a href="https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pd.mp4">https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/pd.mp4</a></a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org13c8636" class="outline-3">
+<h3 id="org13c8636"><span class="section-number-3">4.3</span> P controller</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Coefficients for PID controller are \(K_p=0.238358\), $K<sub>i</sub>=0, and \(K_d=0\).
+</p>
+
+<p>
+<a href="https://rawgit.com/oxidase/CarND-PID-Control-Project/master/doc/video/p.mp4">Link to video file <a href="https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/p.mp4">https://raw.githubusercontent.com/oxidase/CarND-PID-Control-Project/master/doc/video/p.mp4</a></a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc77c0e4" class="outline-3">
+<h3 id="orgc77c0e4"><span class="section-number-3">4.4</span> Comparison</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"Squared error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #008b8b;">set</span> yrange [<span style="color: #008b8b;">0:1000</span>]
+<span style="color: #008b8b;">set</span> ytics 0,200,1000
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:3 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:3 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:3 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/sq_error.png" alt="sq_error.png" />
+</p>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"Cross-track error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:2 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:2 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:2 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/cte.png" alt="cte.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"P-error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:4 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:4 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:4 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/p_error.png" alt="p_error.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"D-error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:6 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:6 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:6 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/d_error.png" alt="d_error.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"I-error"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:5 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:5 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:5 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/i_error.png" alt="i_error.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-gnuplot"><span style="color: #008b8b;">reset</span>
+<span style="color: #008b8b;">set</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">"Steering value"</span>
+<span style="color: #008b8b;">set</span> xlabel <span style="color: #8b2252;">"Step"</span>
+<span style="color: #008b8b;">set</span> yrange [<span style="color: #008b8b;">-1:1</span>]
+<span style="color: #008b8b;">set</span> ytics -1,0.5,1
+<span style="color: #a020f0;">plot</span> <span style="color: #8b2252;">'data/pid.data'</span> <span style="color: #228b22;">using</span> 0:7 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PID controller'</span>,\
+     <span style="color: #8b2252;">'data/pd.data'</span> <span style="color: #228b22;">using</span> 0:7 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'PD controller'</span>,\
+     <span style="color: #8b2252;">'data/p.data'</span> <span style="color: #228b22;">using</span> 0:7 <span style="color: #228b22;">with</span> <span style="color: #0000ff;">lines</span> <span style="color: #228b22;">title</span> <span style="color: #8b2252;">'P controller'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="images/steering value.png" alt="steering value.png" />
+</p>
+</div>
+
+<p>
+Comparison shows that the PID controller is the best choice
+to control the vehicle.
+P-controller fails and the car goes off-road after 300 steps.
+PD-controller performs better at the start but the uncompensated
+integral error makes it worse than PID controller after approximately one loop.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Michael Krasnyk</p>
+<p class="date">Created: 2017-06-03 Sat 11:51</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
