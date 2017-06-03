@@ -1,0 +1,84 @@
+* Parameters tuning
+
+The initial parameter estimation was made with a heuristic [[https://en.wikipedia.org/wiki/PID_controller#Ziegler.E2.80.93Nichols_method][Ziegler–Nichols method]]
+
+| Control Type 	 | $K_{p}$       | 	$K_{i}$                           | $K_{d}$                                |
+|-----------------+---------------+-------------------------------------+----------------------------------------|
+| P 	            | $0.50{K_{u}}$ | 	-                                 | 	-                                    |
+| PI              | $0.45{K_{u}}$ | ${\displaystyle 0.54{K_{u}}/T_{u}}$ | 	-                                    |
+| PID             | $0.60{K_{u}}$ | ${\displaystyle 1.2{K_{u}}/T_{u}}$  | 	${\displaystyle 3{K_{u}}{T_{u}}/40}$ |
+
+The ultimate gain $K_u$ is obtained via bisecting $K_p$ parameter finding an approximate value between stable and unstable oscillation
+|   $K_u$ | result                |
+|       0 | straight              |
+|     -1. | unstable oscillations |
+|    -0.5 | stable oscillations   |
+|   -0.75 | unstable oscillations |
+|  -0.625 | unstable oscillations |
+| -0.5625 | unstable oscillations |
+|   -0.52 | $K_u$                 |
+
+The final results are $K_u=-0.052$ and the oscillation period $T_u=18$ seconds.
+
+| Control Type 	 | $K_{p}$ |         	$K_{i}$ | $K_{d}$  |
+|-----------------+---------+-------------------+----------|
+| PID             |  -0.312 | -3.46666666667e-2 | 	-0.702 |
+
+After some  manual parameters adjustments I chose the following values
+$K_p=-0.2$, $K_i=-0.004$, and $K_d= -2.5$.
+
+These values I used as a starting point for the parameters twiddling procedure explained in the lecture
+
+
+$K_p=-0.25$, $K_i=-5e-3$, and $K_d= -2$.
+
+
+
+plot f(x) w lp lw 1, g(x) w p lw 2, h(x) w l lw 3
+set xrange [-8:8]
+set xtics -8,2,8
+
+set yrange [-20:70]
+set ytics -20,10,70
+
+#+begin_src gnuplot :exports both :file twiddle_error.png
+reset
+
+set title "Error"
+set xlabel "Step"
+set ylabel "Error"
+
+plot 'out.dat' using 0:1 with histeps title 'best error', 'out.dat' using 0:2 with histeps title 'error'
+#+end_src
+
+#+results:
+[[file:twiddle_error.png]]
+
+#+begin_src gnuplot :exports both :file twiddle_p.png
+reset
+set title "P coefficient"
+set xlabel "Step"
+plot 'out.dat' using 0:3 with histeps title 'Kp'
+#+end_src
+
+#+results:
+[[file:twiddle_p.png]]
+#+begin_src gnuplot :exports both :file twiddle_i.png
+reset
+set title "I coefficient"
+set xlabel "Step"
+plot 'out.dat' using 0:4 with histeps title 'Ki'
+#+end_src
+
+#+results:
+[[file:twiddle_i.png]]
+
+#+begin_src gnuplot :exports both :file twiddle_d.png
+reset
+set title "D coefficient"
+set xlabel "Step"
+plot 'out.dat' using 0:5 with histeps title 'Kd'
+#+end_src
+
+#+results:
+[[file:twiddle_d.png]]
